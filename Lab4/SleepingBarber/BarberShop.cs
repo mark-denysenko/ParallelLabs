@@ -10,8 +10,8 @@ namespace Lab4.SleepingBarber
     {
         private readonly int WaitingChairs;
 
-        private ConcurrentQueue<Customer> customersQueue = new ConcurrentQueue<Customer>();
-        private Barber barber;
+        private readonly ConcurrentQueue<Customer> customersQueue = new ConcurrentQueue<Customer>();
+        private readonly Barber barber;
 
         public BarberShop(int totalWaitingChairs)
         {

@@ -1,4 +1,5 @@
-﻿using Lab4.ProducerConsumer;
+﻿using Lab4.DiningPhilosophersProblem;
+using Lab4.ProducerConsumer;
 using Lab4.ReaderWriterBlock;
 using Lab4.SleepingBarber;
 using System;
@@ -23,13 +24,15 @@ namespace Lab4
             DiningPhilosophers();
 
             // lab 4
-            SleepingBarber();
+            //SleepingBarber();
 
             Console.ReadKey();
         }
 
         static void ProducerConsumer()
         {
+            Console.WriteLine("--- Producer Consumer ---");
+
             var queue = new CustomQueue<string>(1000);
             //var queue = new CustomQueueResetEvent<string>(1000);
 
@@ -56,6 +59,8 @@ namespace Lab4
 
         private static void ReadWritersBlock()
         {
+            Console.WriteLine("--- Readers Writers (writer priority) ---");
+
             var container = new ReadWriteContainer<string>("Initial");
 
             // Readers generator
@@ -93,12 +98,17 @@ namespace Lab4
 
         private static void DiningPhilosophers()
         {
+            Console.WriteLine("--- Dining philosophers ---");
+            var table = new DiningTable();
 
+            table.Run();
         }
 
 
         private static void SleepingBarber()
         {
+            Console.WriteLine("--- Sleeping Barber ---");
+
             var barberShop = new BarberShop(3);
             barberShop.StartWork();
 

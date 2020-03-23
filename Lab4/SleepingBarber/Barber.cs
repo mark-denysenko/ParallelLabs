@@ -9,10 +9,9 @@ namespace Lab4.SleepingBarber
     {
         public bool IsSleeping { get; private set; } = false;
 
-        private BarberShop barberShop;
+        private readonly BarberShop barberShop;
 
-        //private object barberSleeper = new object();
-        AutoResetEvent sleepingBarber = new AutoResetEvent(false);
+        private readonly AutoResetEvent sleepingBarber = new AutoResetEvent(false);
 
 
         public Barber(BarberShop barberShop)
