@@ -8,9 +8,8 @@ namespace Lab4.ReaderWriterBlock
     public class ReadWriteContainer<T> : IReadable<T>, IWritable<T>
     {
         private T storedValue;
-        private SemaphoreSlim semaphore = new SemaphoreSlim(1);
-        private Mutex mutex = new Mutex();
-        private int readers = 0;
+        private ManualResetEventSlim readerSignal = new ManualResetEventSlim(true);
+        private Mutex writerMutex = new Mutex();
         private int writers = 0;
 
         public ReadWriteContainer() : this(default) { }
@@ -22,11 +21,10 @@ namespace Lab4.ReaderWriterBlock
 
         public T Read()
         {
-            semaphore.Wait();
+            readerSignal.Wait();
+
             var returnedValue = storedValue;
             Console.WriteLine($"{Thread.CurrentThread.ManagedThreadId} read - {returnedValue}");
-
-            semaphore.Release();
 
             return returnedValue;
         }
@@ -34,40 +32,64 @@ namespace Lab4.ReaderWriterBlock
         public void Write(T value)
         {
             // Writer wants to enter the critical section
-            mutex.WaitOne();
+            writerMutex.WaitOne();
 
-            // there is atleast one writer in the critical section
-            // this ensure no reader can enter if there is even one writer
-            // thus we give preference to writer here
             if (writers == 0)
             {
-                semaphore.Wait();
+                readerSignal.Reset();
             }
             Interlocked.Increment(ref writers);
-
-            // other writers can enter while this current writer is inside 
-            // the critical section
-            mutex.ReleaseMutex();
-
-            // current writer performs writing here
-            mutex.WaitOne();
 
             storedValue = value;
             Console.WriteLine(value);
 
-
             Interlocked.Decrement(ref writers);
 
-            // that is, no writer is left in the critical section,
-            // reader can enter
             if (writers == 0)
             {
-                semaphore.Release();
+                readerSignal.Set();
             }
 
-            // writer leaves
-            mutex.ReleaseMutex();
+            writerMutex.ReleaseMutex();
         }
+
+        //public void Write(T value)
+        //{
+        //    // Writer wants to enter the critical section
+        //    mutex.WaitOne();
+
+        //    // there is atleast one writer in the critical section
+        //    // this ensure no reader can enter if there is even one writer
+        //    // thus we give preference to writer here
+        //    if (writers == 0)
+        //    {
+        //        semaphore.Wait();
+        //    }
+        //    Interlocked.Increment(ref writers);
+
+        //    // other writers can enter while this current writer is inside 
+        //    // the critical section
+        //    mutex.ReleaseMutex();
+
+        //    // current writer performs writing here
+        //    mutex.WaitOne();
+
+        //    storedValue = value;
+        //    Console.WriteLine(value);
+
+
+        //    Interlocked.Decrement(ref writers);
+
+        //    // that is, no writer is left in the critical section,
+        //    // reader can enter
+        //    if (writers == 0)
+        //    {
+        //        semaphore.Release();
+        //    }
+
+        //    // writer leaves
+        //    mutex.ReleaseMutex();
+        //}
 
 
         //public T Read()
@@ -100,7 +122,7 @@ namespace Lab4.ReaderWriterBlock
 
         ~ReadWriteContainer()
         {
-            mutex.Dispose();
+            writerMutex.Dispose();
         }
     }
 }

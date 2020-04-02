@@ -21,10 +21,10 @@ namespace Lab4
             //ReadWritersBlock();
 
             // lab 3
-            DiningPhilosophers();
+            //DiningPhilosophers();
 
             // lab 4
-            //SleepingBarber();
+            SleepingBarber();
 
             Console.ReadKey();
         }
@@ -110,17 +110,7 @@ namespace Lab4
             Console.WriteLine("--- Sleeping Barber ---");
 
             var barberShop = new BarberShop(3);
-            barberShop.StartWork();
-
-            foreach(var customer in Enumerable.Range(0, 50))
-            {
-                Thread.Sleep(400);
-                if (customer % 2 == 0)
-                    Thread.Sleep(800);
-
-                barberShop.EnterCustomer(new Customer());
-            }
-                
+            barberShop.StartWork();             
         }
     }
 }

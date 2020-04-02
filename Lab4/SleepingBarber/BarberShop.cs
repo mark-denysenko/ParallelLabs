@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading;
 
@@ -58,6 +59,20 @@ namespace Lab4.SleepingBarber
             };
 
             barberThread.Start();
+
+
+            Enumerable.Range(0, 50)
+                .AsParallel()
+                .AsUnordered()
+                .WithDegreeOfParallelism(3)
+                .ForAll(index =>
+                {
+                    Thread.Sleep(400);
+                    if (index % 2 == 0)
+                        Thread.Sleep(800);
+
+                    EnterCustomer(new Customer());
+                });
         }
     }
 }
