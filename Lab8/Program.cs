@@ -25,20 +25,23 @@ namespace Lab8
                 Console.WriteLine();
             }
 
-            FindElement(doc);
+            var xmlDoc = new XmlDocument();
+            xmlDoc.Load(path + "\\Computer.xml");
+            FindElement(xmlDoc);
             Console.WriteLine();
 
 
             Console.ReadKey();
         }
 
-        private static void FindElement(XDocument doc)
+        private static void FindElement(XmlDocument doc)
         {
-            var root = doc.Root;
+            var root = doc.DocumentElement;
+            XmlNodeList nodes = root.SelectNodes("*");
 
-            foreach(var child in root.Descendants())
+            foreach (XmlNode node in nodes)
             {
-                Console.WriteLine(child.Name.LocalName + " - " + child.Value);
+                Console.WriteLine(node.OuterXml + " - " + node.Value);
             }
 
         }
