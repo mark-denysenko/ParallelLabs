@@ -1,0 +1,57 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema
+    targetNamespace="http://tempuri.org/Computer.xsd"
+    elementFormDefault="qualified"
+    xmlns="http://tempuri.org/Computer.xsd"
+    xmlns:mstns="http://tempuri.org/Computer.xsd"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+>
+  <xs:element name="Computer">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element type="xs:string" name="Name"/>
+        <xs:element type="xs:string" name="Origin"/>
+        <xs:element name="Price">
+          <xs:simpleType>
+            <xs:restriction base="xs:integer">
+              <xs:minInclusive value="0"/>
+            </xs:restriction>
+          </xs:simpleType>
+        </xs:element>
+        <xs:element type="xs:boolean" name="IsCritical"/>
+        <xs:element name="Type" maxOccurs="unbounded" minOccurs="0">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element type="xs:boolean" name="IsPeripheral"/>
+              <xs:element name="EnergyConsumption">
+                <xs:simpleType>
+                  <xs:restriction base="xs:integer">
+                    <xs:minInclusive value="0"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element type="xs:boolean" name="HasCooler"/>
+              <xs:element name="TypeGroup">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:enumeration value="Multimedia"/>
+                    <xs:enumeration value="In/Out"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="Port" maxOccurs="3" minOccurs="0">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:enumeration value="COM"/>
+                    <xs:enumeration value="USB"/>
+                    <xs:enumeration value="LPT"/>
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>
