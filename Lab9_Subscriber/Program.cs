@@ -54,9 +54,40 @@ namespace Lab9_Subscriber
             {
                 var basicDeliveryEventArgs = subscription.Next();
                 string messageContent = Encoding.UTF8.GetString(basicDeliveryEventArgs.Body);
+
                 // action
-                HandleMessage(messageContent);
+                try
+                {
+                    var computer = System.Text.Json.JsonSerializer.Deserialize<Computer>(messageContent);
+                    HandleMessage(computer);
+                }
+                catch(Exception e)
+                {
+                    HandleMessage(messageContent);
+                }
+
                 subscription.Ack(basicDeliveryEventArgs);
+            }
+        }
+
+        private static void HandleMessage(Computer computer)
+        {
+            Console.WriteLine("Received computer");
+
+            try
+            {
+                var command = new SqlCommand(@"INSERT INTO [dbo].[Computers]([Name], [IsDiscreteVideoCard], [CPU], [RAM]) 
+                    VALUES (@Name, @IsDiscreteVideoCard, @CPU, @RAM)", sqlConn);
+                command.Parameters.AddWithValue("CPU", computer.CPU);
+                command.Parameters.AddWithValue("IsDiscreteVideoCard", computer.IsDiscreteVideoCard);
+                command.Parameters.AddWithValue("Name", computer.Name);
+                command.Parameters.AddWithValue("RAM", computer.RAM);
+                sqlConn.Open();
+                command.ExecuteNonQuery();
+            }
+            finally
+            {
+                sqlConn.Close();
             }
         }
 
@@ -76,6 +107,15 @@ namespace Lab9_Subscriber
                 sqlConn.Close();
             }
         }
+
+
+
+
+
+
+
+
+
 
         private string ReceiveIndividualMessage()
         {

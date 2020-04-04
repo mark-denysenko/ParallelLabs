@@ -20,6 +20,7 @@ namespace Lab8
             {
                 var computer = Deserialize<Computer>(doc);
                 var computerJson = System.Text.Json.JsonSerializer.Serialize(computer);
+                var deserialize = System.Text.Json.JsonSerializer.Deserialize<Computer>(computerJson);
 
                 Console.WriteLine(computerJson);
                 Console.WriteLine();
